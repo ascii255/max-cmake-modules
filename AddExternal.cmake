@@ -4,7 +4,7 @@ set(CMAKE_XCODE_GENERATE_SCHEME TRUE)
 cmake_path(GET CMAKE_CURRENT_LIST_FILE PARENT_PATH CURRENT_MODULE_DIR)
 
 function(add_external TARGET EXTERNAL_NAME)
-    cmake_parse_arguments(ARG "" "VERSION;REVERSE_DOMAIN;COPYRIGHT" "" ${ARGN})
+    cmake_parse_arguments(ARG "CUSTOM_DOCUMENTATION" "VERSION;REVERSE_DOMAIN;COPYRIGHT" "" ${ARGN})
     if(ARG_VERSION)
         set(PACKAGE_VERSION ${ARG_VERSION})
     endif()
@@ -43,4 +43,16 @@ function(add_external TARGET EXTERNAL_NAME)
         XCODE_SCHEME_EXECUTABLE /Applications/Max.app
         XCODE_SCHEME_ARGUMENTS "\"\${PROJECT_DIR}/help/${EXTERNAL_NAME}.maxhelp\""
     )
+
+    if(ARG_CUSTOM_DOCUMENTATION)
+        add_custom_command(TARGET ${TARGET} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E touch_nocreate ${CMAKE_SOURCE_DIR}/docs/${EXTERNAL_NAME}.maxref.xml
+            COMMENT "Touching documentation to avoid regeneration"
+        )
+    else()
+        add_custom_command(TARGET ${TARGET} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E rm -rf ${CMAKE_SOURCE_DIR}/docs/${EXTERNAL_NAME}.maxref.xml
+            COMMENT "Removing documentation to force regeneration"
+        )
+    endif()
 endfunction()

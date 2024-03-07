@@ -18,12 +18,24 @@ list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 ```
 
 It is recommended that you add the repository into the `cmake` folder as a submodule and then symlink the find modules.
+
+**OSX**
 ```
 pushd cmake
 git submodule add https://github.com/ascii255/max-cmake-modules.git Max
 ln -s Max/FindModules/FindMaxAPI.cmake FindMaxAPI.cmake
 ln -s Max/FindModules/FindMinAPI.cmake FindMinAPI.cmake
 ln -s Max/FindModules/FindMinLib.cmake FindMinLib.cmake
+popd
+```
+
+**Windows (Powershell, admin rights maybe required)**
+```
+pushd cmake
+git submodule add https://github.com/ascii255/max-cmake-modules.git Max
+ni -itemtype SymbolicLink -target Max\FindModules\FindMaxAPI.cmake FindMaxAPI.cmake
+ni -itemtype SymbolicLink -target Max\FindModules\FindMinAPI.cmake FindMinAPI.cmake
+ni -itemtype SymbolicLink -target Max\FindModules\FindMinLib.cmake FindMinLib.cmake
 popd
 ```
 
@@ -109,4 +121,57 @@ call to the `parse_package_info` macro of the `ParsePackageInfo` module that set
 omitted.
 ```cmake
 add_external(${EXTERNAL_TARGET} ${EXTERNAL_NAME})
+```
+
+To trigger regeneration of the documentation from the source code, the module will remove the documentation file for 
+the external in `docs` after the external was built. To avoid this behavior if a custom documentation is provided and 
+generation should be avoided, the argument `CUSTUM_DOCUMENTATION` can be specified.
+```cmake
+add_external(${EXTERNAL_TARGET} ${EXTERNAL_NAME} CUSTOM_DOCUMENTATION)
+```
+
+### AddSigning
+This module is for Mac only and will handle signing and notarization of the built externals. A signing certificate has 
+to be provided. An [Apple Developer ID](https://developer.apple.com/developer-id/) is required. To generate the signing 
+certificate follow the 
+[instructions from Apple](https://developer.apple.com/help/account/create-certificates/create-developer-id-certificates/).
+
+To check if you have a valid `Developer ID` present on your system you can use:
+```
+xcrun security find-identity -v -p codesigning
+```
+
+The `add_signing` function should be called after the `add_external` function has been called for the same target.
+```cmake
+add_signing(${EXTERNAL_TARGET} CERTIFICATE ${SIGNING_CERTIFICATE_COMMON_NAME})
+```
+
+The argument `CERTIFICATE` can be omitted if a valid `Developer ID` certificate is present. Then the first valid 
+certificate will be used.
+```cmake
+add_signing(${EXTERNAL_TARGET})
+```
+
+If the argument `NOTARIZE` is given, the external will also be notarized. Credentials have to be present in the 
+keychain. To setup the keychain it is recommended to use a command from the 
+[customizing the notarization workflow tutorial](https://developer.apple.com/documentation/security/notarizing_macos_software_before_distribution/customizing_the_notarization_workflow):
+```
+xcrun notarytool store-credentials "notarytool-password"
+               --apple-id "<AppleID>"
+               --team-id <DeveloperTeamID>
+               --password <secret_2FA_password>
+```
+
+### GeneratePackageDMG
+This module is for Mac only and will generate a drag and drop DMG image containing the package and a symlink to 
+`/Users/Shared/Max 8/Packages`. The module is using CPack internally and the `DragNDrop` generator.
+```cmake
+include(Max/GeneratePackageDMG)
+generate_package_dmg(${PROJECT_NAME})
+```
+
+The package can be created using the cmake target `package`.
+```cmake
+cmake -B build -S . -D CMAKE_BUILD_TYPE=Release
+cmake --build build --config Release --target package
 ```
