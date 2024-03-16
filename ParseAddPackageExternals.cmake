@@ -47,7 +47,9 @@ function(parse_add_package_externals FILEPATH)
         
         target_link_libraries(${EXTERNAL} PRIVATE ${MaxAPI_LIBRARIES} ${MinAPI_LIBRARY} ${EXTERNAL_LINK_LIBRARIES})
         
-        add_signing(${EXTERNAL})
+        if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+            add_signing(${EXTERNAL})
+        endif()
     endforeach()
 endfunction()
 

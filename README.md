@@ -12,31 +12,16 @@ There are three find modules that can be used to find libraries and create CMake
 * `FindMinAPI`
 * `FindMinLib`
 
-Usually the modules are put into a `cmake` folder and this directory is added to the `CMAKE_MODULE_PATH`.
+Usually CMake modules are put into a `cmake` folder and this directory is added to the `CMAKE_MODULE_PATH`. It is 
+recommended that you add the repository into the `cmake` folder as a submodule.
+```
+pushd cmake
+git submodule add https://github.com/ascii255/max-cmake-modules.git Max
+popd
+```
+In your `CMakeLists.txt` the `cmake` folder and the `FindModules` path should be appended to the `CMAKE_MODULE_PATH`.
 ```cmake
-list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
-```
-
-It is recommended that you add the repository into the `cmake` folder as a submodule and then symlink the find modules.
-
-**OSX**
-```
-pushd cmake
-git submodule add https://github.com/ascii255/max-cmake-modules.git Max
-ln -s Max/FindModules/FindMaxAPI.cmake FindMaxAPI.cmake
-ln -s Max/FindModules/FindMinAPI.cmake FindMinAPI.cmake
-ln -s Max/FindModules/FindMinLib.cmake FindMinLib.cmake
-popd
-```
-
-**Windows (Powershell, admin rights maybe required)**
-```
-pushd cmake
-git submodule add https://github.com/ascii255/max-cmake-modules.git Max
-ni -itemtype SymbolicLink -target Max\FindModules\FindMaxAPI.cmake FindMaxAPI.cmake
-ni -itemtype SymbolicLink -target Max\FindModules\FindMinAPI.cmake FindMinAPI.cmake
-ni -itemtype SymbolicLink -target Max\FindModules\FindMinLib.cmake FindMinLib.cmake
-popd
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_SOURCE_DIR}/source/cmake/Max/FindModules)
 ```
 
 The CMake targets will be created using
