@@ -24,12 +24,12 @@ In your `CMakeLists.txt` the `cmake` folder and the `FindModules` path should be
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_SOURCE_DIR}/source/cmake/Max/FindModules)
 ```
 
-The CMake targets will be created using
+The CMake targets will be created after the `project` command using
 ```cmake
-find_package(MaxAPI REQUIRED)
 find_package(MinAPI REQUIRED)
 find_package(MinLib REQUIRED)
 ```
+The `FindMinAPI` module will also create the `MaxAPI` targets and link them.
 
 The module will look for the repositories somewhere in the `${CMAKE_SOURCE_DIR}`. It is recommended to have the 
 [min-api](https://github.com/Cycling74/min-api) and optionally the [min-lib](https://github.com/Cycling74/min-lib) 
@@ -40,7 +40,7 @@ git submodule add https://github.com/Cycling74/min-api.git
 git submodule add https://github.com/Cycling74/min-lib.git
 ```
 
-The `find_package` funtions will fill the variables
+The `find_package` functions will fill the variables
 * `MaxAPI_LIBRARIES`, `MaxAPI_INCLUDE_DIRS`
 * `MinAPI_LIBRARY`, `MinAPI_INCLUDE_DIR`
 * `MinLib_LIBRARY`, `MinLib_INCLUDE_DIR`
@@ -50,9 +50,9 @@ and the targets
 * `MinAPI::MinAPI`
 * `MinLib::MinLib`
 
-To link the targets use
+To link the MinAPI use
 ```cmake
-target_link_libraries(${EXTERNAL_TARGET} PRIVATE ${MaxAPI_LIBRARIES} ${MinAPI_LIBRARY})
+target_link_libraries(${EXTERNAL_TARGET} PRIVATE MinAPI::MinAPI)
 ```
 
 For the `MaxAPI` module components can be listed.

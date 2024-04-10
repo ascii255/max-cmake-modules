@@ -13,6 +13,8 @@ if(NOT MinAPI_ROOT)
     unset(MIN_API_ROOT_PATH)
 endif()
 
+find_package(MaxAPI REQUIRED)
+
 find_path(MinAPI_INCLUDE_DIR c74_min_api.h PATHS ${MinAPI_ROOT}/include REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
 mark_as_advanced(MinAPI_INCLUDE_DIR)
 
@@ -25,4 +27,5 @@ if(MinAPI_FOUND AND NOT TARGET MinAPI::MinAPI)
     set(MinAPI_LIBRARY MinAPI::MinAPI)
     target_compile_definitions(MinAPI::MinAPI INTERFACE C74_MIN_API)
     target_include_directories(MinAPI::MinAPI SYSTEM INTERFACE ${MinAPI_INCLUDE_DIR})
+    target_link_libraries(MinAPI::MinAPI INTERFACE ${MaxAPI_LIBRARIES})
 endif()
