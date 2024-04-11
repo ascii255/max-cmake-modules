@@ -108,6 +108,8 @@ omitted.
 add_external(${EXTERNAL_TARGET} ${EXTERNAL_NAME})
 ```
 
+On an `ARM64` Mac computer or when `CMAKE_OSX_ARCHITECTURES` are set, signing (see `AddSigning`) is always added.
+
 To trigger regeneration of the documentation from the source code, the module will remove the documentation file for 
 the external in `docs` after the external was built. To avoid this behavior if a custom documentation is provided and 
 generation should be avoided, the argument `CUSTUM_DOCUMENTATION` can be specified.
@@ -128,13 +130,24 @@ xcrun security find-identity -v -p codesigning
 
 The `add_signing` function should be called after the `add_external` function has been called for the same target.
 ```cmake
-add_signing(${EXTERNAL_TARGET} CERTIFICATE ${SIGNING_CERTIFICATE_COMMON_NAME})
+add_signing(${EXTERNAL_TARGET} CERTIFICATE ${SIGNING_CERTIFICATE})
 ```
 
-The argument `CERTIFICATE` can be omitted if a valid `Developer ID` certificate is present. Then the first valid 
-certificate will be used.
+The argument `CERTIFICATE` can be omitted if a valid `Developer ID` certificate is present in the local keychain. Then
+the first valid certificate will be used.
 ```cmake
 add_signing(${EXTERNAL_TARGET})
+```
+If no valid certificate is present, the external will be signed to run only locally.
+
+The CMake argument `SIGNING_CERTIFICATE` can also be used to define the certificate.
+```
+cmake ... -DSIGNING_CERTIFICATE="..."
+```
+
+To force not to use a certificate from the keychain use:
+```
+cmake ... -DSIGNING_CERTIFICATE="-"
 ```
 
 If the argument `NOTARIZE` is given, the external will also be notarized. Credentials have to be present in the 
