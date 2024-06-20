@@ -94,7 +94,8 @@ project(${PACKAGE_NAME}
 This module will add a target configured to be build as a Max external.
 ```cmake
 include(Max/AddExternal)
-add_external(${EXTERNAL_TARGET} ${EXTERNAL_NAME}
+add_external(${EXTERNAL_TARGET}
+    NAME ${EXTERNAL_NAME}
     VERSION ${PACKAGE_VERSION}
     REVERSE_DOMAIN ${PACKAGE_REVERSE_DOMAIN}
     COPYRIGHT ${PACKAGE_COPYRIGHT}
@@ -105,7 +106,7 @@ If the variables `PACKAGE_VERSION`, `PACKAGE_REVERSE_DOMAIN`, `PACKAGE_COPYRIGHT
 call to the `parse_package_info` macro of the `ParsePackageInfo` module that set them, the optional arguments can be 
 omitted.
 ```cmake
-add_external(${EXTERNAL_TARGET} ${EXTERNAL_NAME})
+add_external(${EXTERNAL_TARGET} NAME ${EXTERNAL_NAME})
 ```
 
 On an `ARM64` Mac computer or when `CMAKE_OSX_ARCHITECTURES` are set, signing (see `AddSigning`) is always added.
@@ -114,7 +115,7 @@ To trigger regeneration of the documentation from the source code, the module wi
 the external in `docs` after the external was built. To avoid this behavior if a custom documentation is provided and 
 generation should be avoided, the argument `CUSTUM_DOCUMENTATION` can be specified.
 ```cmake
-add_external(${EXTERNAL_TARGET} ${EXTERNAL_NAME} CUSTOM_DOCUMENTATION)
+add_external(${EXTERNAL_TARGET} NAME ${EXTERNAL_NAME} CUSTOM_DOCUMENTATION)
 ```
 
 ### AddSigning
