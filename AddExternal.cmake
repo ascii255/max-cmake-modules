@@ -59,6 +59,10 @@ function(add_external TARGET)
         XCODE_SCHEME_ARGUMENTS "\"\${PROJECT_DIR}/help/${EXTERNAL_NAME}.maxhelp\""
     )
 
+    if(MSVC)
+        target_link_options(${TARGET} PRIVATE /INCREMENTAL:NO)
+    endif()
+    
     if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
         include(Max/AddSigning)
         add_signing(${TARGET})

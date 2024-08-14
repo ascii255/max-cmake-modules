@@ -49,7 +49,6 @@ if(MaxAPI_FIND_COMPONENTS MATCHES Core OR NOT MaxAPI_FIND_COMPONENTS)
 
             set_target_properties(MaxAPI::Core PROPERTIES
                 IMPORTED_IMPLIB ${MaxAPI_Core_LIBRARY}
-                LINKER_LANGUAGE CXX
                 SYSTEM TRUE
             )
 
@@ -86,7 +85,6 @@ if(MaxAPI_FIND_COMPONENTS MATCHES Audio OR NOT MaxAPI_FIND_COMPONENTS)
             set_target_properties(MaxAPI::Audio PROPERTIES
                 FRAMEWORK TRUE
                 IMPORTED_LOCATION ${MaxAPI_Audio_LIBRARY}
-                LINKER_LANGUAGE CXX
                 MACOSX_FRAMEWORK_IDENTIFIER "com.cycling74.MaxAudioAPI"
                 MACOSX_FRAMEWORK_INFO_PLIST ${MaxAPI_Audio_LIBRARY}/Resources/Info.plist
                 SYSTEM TRUE
@@ -94,7 +92,6 @@ if(MaxAPI_FIND_COMPONENTS MATCHES Audio OR NOT MaxAPI_FIND_COMPONENTS)
         elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
             set_target_properties(MaxAPI::Audio PROPERTIES
                 IMPORTED_IMPLIB ${MaxAPI_Audio_LIBRARY}
-                LINKER_LANGUAGE CXX
                 SYSTEM TRUE
             )
 
@@ -128,7 +125,6 @@ if(MaxAPI_FIND_COMPONENTS MATCHES Jitter OR NOT MaxAPI_FIND_COMPONENTS)
             set_target_properties(MaxAPI::Jitter PROPERTIES
                 FRAMEWORK TRUE
                 IMPORTED_LOCATION ${MaxAPI_Jitter_LIBRARY}
-                LINKER_LANGUAGE CXX
                 MACOSX_FRAMEWORK_IDENTIFIER "com.cycling74.JitterAPI"
                 MACOSX_FRAMEWORK_INFO_PLIST ${MaxAPI_Jitter_LIBRARY}/Resources/Info.plist
                 SYSTEM TRUE
@@ -136,7 +132,6 @@ if(MaxAPI_FIND_COMPONENTS MATCHES Jitter OR NOT MaxAPI_FIND_COMPONENTS)
         elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
             set_target_properties(MaxAPI::Jitter PROPERTIES
                 IMPORTED_IMPLIB ${MaxAPI_Jitter_LIBRARY}
-                LINKER_LANGUAGE CXX
                 SYSTEM TRUE
             )
 
