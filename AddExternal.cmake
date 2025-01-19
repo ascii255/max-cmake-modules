@@ -32,7 +32,7 @@ function(add_external TARGET)
     set_target_properties(${TARGET} PROPERTIES
         BUNDLE TRUE
         BUNDLE_EXTENSION mxo
-        INTERPROCEDURAL_OPTIMIZATION ON
+        INTERPROCEDURAL_OPTIMIZATION <$OR:<$CONFIG:MinSizeRel>,<$CONFIG:Release>>
         LIBRARY_OUTPUT_DIRECTORY ${OUTPUT_DIRECTORY}
         LIBRARY_OUTPUT_DIRECTORY_DEBUG ${OUTPUT_DIRECTORY}
         LIBRARY_OUTPUT_DIRECTORY_MINSIZEREL ${OUTPUT_DIRECTORY}
@@ -52,6 +52,8 @@ function(add_external TARGET)
         PREFIX ""
         SUFFIX .mxe64
         XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR ${OUTPUT_DIRECTORY}
+        XCODE_ATTRIBUTE_LLVM_LTO[variant=MinSizeRel] YES
+        XCODE_ATTRIBUTE_LLVM_LTO[variant=Release] YES
         XCODE_ATTRIBUTE_PRODUCT_BUNDLE_IDENTIFIER ${BUNDLE_IDENTIFIER}
         XCODE_ATTRIBUTE_PRODUCT_MODULE_NAME ${EXTERNAL_NAME}
         XCODE_ATTRIBUTE_WRAPPER_EXTENSION mxo
@@ -61,6 +63,13 @@ function(add_external TARGET)
 
     if(MSVC)
         target_link_options(${TARGET} PRIVATE /INCREMENTAL:NO)
+    endif()
+    
+    if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND CMAKE_GENERATOR STREQUAL "Ninja")
+        add_custom_command(TARGET ${TARGET} POST_BUILD
+            COMMAND ${CMAKE_COMMAND} -E rm -r ${CMAKE_BINARY_DIR}/$<CONFIG>/$<TARGET_BUNDLE_DIR_NAME:${TARGET}>
+            COMMENT "Remove empty output directory Ninja creates."
+        )
     endif()
     
     if(CMAKE_SYSTEM_NAME STREQUAL "Darwin")
