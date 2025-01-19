@@ -64,10 +64,10 @@ function(add_external TARGET)
     if(MSVC)
         target_link_options(${TARGET} PRIVATE /INCREMENTAL:NO)
     endif()
-    
+
     if(CMAKE_SYSTEM_NAME STREQUAL "Darwin" AND CMAKE_GENERATOR STREQUAL "Ninja")
         add_custom_command(TARGET ${TARGET} POST_BUILD
-            COMMAND ${CMAKE_COMMAND} -E rm -r ${CMAKE_BINARY_DIR}/$<CONFIG>/$<TARGET_BUNDLE_DIR_NAME:${TARGET}>
+            COMMAND ${CMAKE_COMMAND} -E rm -rf ${CMAKE_BINARY_DIR}/$<CONFIG>/$<TARGET_BUNDLE_DIR_NAME:${TARGET}>
             COMMENT "Remove empty output directory Ninja creates."
         )
     endif()

@@ -22,9 +22,9 @@ if(NOT C74_SUPPORT_PATH)
 endif()
 
 if(MaxAPI_FIND_COMPONENTS MATCHES Core OR NOT MaxAPI_FIND_COMPONENTS)
-    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Darwin")
         find_library(MaxAPI_Core_LIBRARY MaxAPI PATHS ${C74_SUPPORT_PATH}/max-includes REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
-    elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    elseif(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
         find_library(MaxAPI_Core_LIBRARY MaxAPI PATHS ${C74_SUPPORT_PATH}/max-includes/x64 REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
     endif()
     find_path(MaxAPI_Core_INCLUDE_DIR c74_linker_flags.txt PATHS ${C74_SUPPORT_PATH}/max-includes REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
@@ -37,14 +37,14 @@ if(MaxAPI_FIND_COMPONENTS MATCHES Core OR NOT MaxAPI_FIND_COMPONENTS)
     mark_as_advanced(MaxAPI_Core_LIBRARY MaxAPI_Core_INCLUDE_DIR)
     
     if(MaxAPI_Core_FOUND AND NOT TARGET MaxAPI::Core)
-        if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Darwin")
             add_library(MaxAPI::Core INTERFACE IMPORTED)
         
             file(READ ${MaxAPI_Core_INCLUDE_DIR}/c74_linker_flags.txt C74_SYM_MAX_LINKER_FLAGS)
             string(REPLACE "\n" "" C74_SYM_MAX_LINKER_FLAGS ${C74_SYM_MAX_LINKER_FLAGS})
             string(REPLACE " " ";" C74_SYM_MAX_LINKER_FLAGS ${C74_SYM_MAX_LINKER_FLAGS})
             target_link_options(MaxAPI::Core INTERFACE ${C74_SYM_MAX_LINKER_FLAGS})
-        elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        elseif(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
             add_library(MaxAPI::Core SHARED IMPORTED)
 
             set_target_properties(MaxAPI::Core PROPERTIES
@@ -64,9 +64,9 @@ if(MaxAPI_FIND_COMPONENTS MATCHES Core OR NOT MaxAPI_FIND_COMPONENTS)
 endif()
 
 if(MaxAPI_FIND_COMPONENTS MATCHES Audio OR NOT MaxAPI_FIND_COMPONENTS)
-    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Darwin")
         find_library(MaxAPI_Audio_LIBRARY MaxAudioAPI PATHS ${C74_SUPPORT_PATH}/msp-includes REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
-    elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    elseif(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
         find_library(MaxAPI_Audio_LIBRARY MaxAudio PATHS ${C74_SUPPORT_PATH}/msp-includes/x64 REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
     endif()
     find_path(MaxAPI_Audio_INCLUDE_DIR MaxAudioAPI.h PATHS ${C74_SUPPORT_PATH}/msp-includes REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
@@ -81,7 +81,7 @@ if(MaxAPI_FIND_COMPONENTS MATCHES Audio OR NOT MaxAPI_FIND_COMPONENTS)
     if(MaxAPI_Audio_FOUND AND NOT TARGET MaxAPI::Audio)
         add_library(MaxAPI::Audio SHARED IMPORTED)
     
-        if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Darwin")
             set_target_properties(MaxAPI::Audio PROPERTIES
                 FRAMEWORK TRUE
                 IMPORTED_LOCATION ${MaxAPI_Audio_LIBRARY}
@@ -89,7 +89,7 @@ if(MaxAPI_FIND_COMPONENTS MATCHES Audio OR NOT MaxAPI_FIND_COMPONENTS)
                 MACOSX_FRAMEWORK_INFO_PLIST ${MaxAPI_Audio_LIBRARY}/Resources/Info.plist
                 SYSTEM TRUE
             )
-        elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        elseif(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
             set_target_properties(MaxAPI::Audio PROPERTIES
                 IMPORTED_IMPLIB ${MaxAPI_Audio_LIBRARY}
                 SYSTEM TRUE
@@ -104,9 +104,9 @@ if(MaxAPI_FIND_COMPONENTS MATCHES Audio OR NOT MaxAPI_FIND_COMPONENTS)
 endif()
 
 if(MaxAPI_FIND_COMPONENTS MATCHES Jitter OR NOT MaxAPI_FIND_COMPONENTS)
-    if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Darwin")
         find_library(MaxAPI_Jitter_LIBRARY JitterAPI PATHS ${C74_SUPPORT_PATH}/jit-includes REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
-    elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    elseif(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
         find_library(MaxAPI_Jitter_LIBRARY jitlib PATHS ${C74_SUPPORT_PATH}/jit-includes/x64 REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
     endif()
     find_path(MaxAPI_Jitter_INCLUDE_DIR jit.common.h PATHS ${C74_SUPPORT_PATH}/jit-includes REQUIRED NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
@@ -121,7 +121,7 @@ if(MaxAPI_FIND_COMPONENTS MATCHES Jitter OR NOT MaxAPI_FIND_COMPONENTS)
     if(MaxAPI_Jitter_FOUND AND NOT TARGET MaxAPI::Jitter)
         add_library(MaxAPI::Jitter SHARED IMPORTED)
     
-        if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        if(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Darwin")
             set_target_properties(MaxAPI::Jitter PROPERTIES
                 FRAMEWORK TRUE
                 IMPORTED_LOCATION ${MaxAPI_Jitter_LIBRARY}
@@ -129,7 +129,7 @@ if(MaxAPI_FIND_COMPONENTS MATCHES Jitter OR NOT MaxAPI_FIND_COMPONENTS)
                 MACOSX_FRAMEWORK_INFO_PLIST ${MaxAPI_Jitter_LIBRARY}/Resources/Info.plist
                 SYSTEM TRUE
             )
-        elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+        elseif(${CMAKE_HOST_SYSTEM_NAME} MATCHES "Windows")
             set_target_properties(MaxAPI::Jitter PROPERTIES
                 IMPORTED_IMPLIB ${MaxAPI_Jitter_LIBRARY}
                 SYSTEM TRUE
