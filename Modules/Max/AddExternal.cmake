@@ -20,7 +20,7 @@ function(add_external TARGET)
     if(ARG_OUTPUT_DIRECTORY)
         set(OUTPUT_DIRECTORY ${ARG_OUTPUT_DIRECTORY})
     else()
-        set(OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/externals)
+        set(OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/externals)
     endif()
 
     set(PRODUCT_IDENTIFIER ${EXTERNAL_NAME})
